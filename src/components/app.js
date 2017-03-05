@@ -1,17 +1,22 @@
 import React, {Component} from 'react';
-
-import SearchBar from '../containers/search_bar.js';
-import VideoList from '../containers/video_list.js';
-import VideoDetail from '../containers/video_detail.js';
-
+import SectionRight from '../containers/section-right';
+import SectionCenter from '../containers/section-center';
 
 export default class App extends Component {
-    render(){
+    render() {
         return (
             <div>
-                <SearchBar />
-                <VideoDetail />
-                <VideoList />
+                <div>
+                    <div className="section section-left">
+                        <h3>Youtube Lists</h3>
+                    </div>
+                    <div className="section section-header">
+                        section header
+                    </div>
+                    <SectionCenter />
+                    <SectionRight />
+
+                </div>
             </div>
         )
     }

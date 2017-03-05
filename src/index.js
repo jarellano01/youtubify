@@ -15,4 +15,4 @@ ReactDOM.render(
     <Provider store={createStoreWithMiddleware(reducers)} >
         <Router routes={Routes} history={browserHistory} />
     </Provider>
-    , document.querySelector('.container'));
+    , document.querySelector('.content'));
