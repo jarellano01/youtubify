@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import SectionLeft from '../containers/section-left';
 import SectionRight from '../containers/section-right';
 import SectionCenter from '../containers/section-center';
 
@@ -7,9 +8,7 @@ export default class App extends Component {
         return (
             <div>
                 <div>
-                    <div className="section section-left">
-                        <h3>Youtube Lists</h3>
-                    </div>
+                    <SectionLeft />
                     <div className="section section-header">
                         section header
                     </div>

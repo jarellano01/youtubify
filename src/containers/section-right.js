@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import {fetchVideos} from '../actions/index';
+import {bindActionCreators} from 'redux';
 
 import ListItem from '../components/list-item';
 
@@ -16,32 +19,16 @@ class SectionRight extends Component {
 
     videoList() {
         return (
-            this.state.searchVideos.map((video) => {
+            this.props.searchResults.map((video) => {
                 return (
                     <ListItem key={video.etag} video={video} />
                 )
-
-
             })
         )
     }
 
     componentWillMount() {
-        const API_KEY = "AIzaSyCDckXGCJkOP4GzbEZbND97quu9LIzZA7E";
-        let baseUrl = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}`;
-        let self = this;
-
-        axios.get(baseUrl, {
-            params: {
-                part: "snippet",
-                q: "Classical Guitar"
-            }
-        })
-            .then(function (response) {
-                self.setState({
-                    searchVideos: response.data.items
-                });
-            })
+        this.props.fetchVideos('classical guitar');
     }
 
     render() {
@@ -52,6 +39,13 @@ class SectionRight extends Component {
         )
     }
 }
-export default SectionRight;
 
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({fetchVideos}, dispatch);
+}
+
+function mapStateToProps(state) {
+    return {searchResults: state.searchResults}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(SectionRight);

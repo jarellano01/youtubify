@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import YouTube from 'react-youtube';
+
 
 const videoIdA = 'XxVg_s8xAms';
 const videoIdB = '-DX3vJiqxm4';
@@ -70,4 +74,11 @@ class SectionCenter extends Component {
     }
 }
 
-export default SectionCenter;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({}, dispatch);
+}
+
+function mapStateToProps(state) {
+    return {}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(SectionCenter);

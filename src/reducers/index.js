@@ -1,11 +1,13 @@
 import { combineReducers} from 'redux';
-import VideoReducer from './reducer_videos';
+import ResultsReducer from './reducer_results';
 import SelectedVideoReducer from './reducer_selected_video';
+import PlaylistsReducer from './reducer_playlists';
 
 
 const rootReducer = combineReducers({
-    videos: VideoReducer,
-    selectedVideo: SelectedVideoReducer
+    searchResults: ResultsReducer,
+    selectedVideo: SelectedVideoReducer,
+    playlists: PlaylistsReducer
 
 });
 
