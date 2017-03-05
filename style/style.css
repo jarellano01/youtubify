@@ -60,6 +60,10 @@
     overflow: auto;
 }
 
+.list-item:hover{
+    cursor: pointer;
+}
+
 .list-item img {
     width: 90px;
     margin-right: 10px;

@@ -26,12 +26,11 @@ class SectionCenter extends Component {
     onReady(event) {
         this.setState({
             player: event.target,
-
         });
+        console.log(this.props.selectedVideo)
     }
 
     onPlayPauseVideo() {
-        console.log(this.state.player.getPlayerState());
         if(this.state.player.getPlayerState() == 1){
             this.state.player.pauseVideo();
             this.setState({
@@ -58,12 +57,12 @@ class SectionCenter extends Component {
         const opts = {
             playerVars: {
                 controls: 0,
-                disablekb:1
+                disable:1
             }
         };
         return (
             <div className="section section-center">
-                <YouTube className="section-player" videoId={this.state.videoId} onReady={this.onReady} opts={opts}/>
+                <YouTube className="section-player" videoId={this.props.selectedVideo.id.videoId} onReady={this.onReady} opts={opts}/>
 
                 <div className="control-bar">
                     <button className="btn btn-default" onClick={this.onPlayPauseVideo}>{this.state.playerActive ? "Pause": "Play"}</button>
@@ -79,6 +78,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-    return {}
+    return {selectedVideo: state.selectedVideo}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SectionCenter);

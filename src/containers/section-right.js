@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {fetchVideos} from '../actions/index';
+import {fetchVideos, selectVideo} from '../actions/index';
 import {bindActionCreators} from 'redux';
 
 import ListItem from '../components/list-item';
@@ -21,7 +21,7 @@ class SectionRight extends Component {
         return (
             this.props.searchResults.map((video) => {
                 return (
-                    <ListItem key={video.etag} video={video} />
+                    <ListItem key={video.etag} video={video} selectVideo={this.props.selectVideo} />
                 )
             })
         )
@@ -42,7 +42,10 @@ class SectionRight extends Component {
 
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({fetchVideos}, dispatch);
+    return bindActionCreators({
+        fetchVideos:fetchVideos,
+        selectVideo: selectVideo
+    }, dispatch);
 }
 
 function mapStateToProps(state) {
