@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import _ from 'lodash';
 
 import ListItem from '../components/list-item';
 
@@ -16,7 +15,6 @@ class SectionRight extends Component {
     }
 
     videoList() {
-        console.log(this.state.searchVideos);
         return (
             this.state.searchVideos.map((video) => {
                 return (
@@ -36,7 +34,7 @@ class SectionRight extends Component {
         axios.get(baseUrl, {
             params: {
                 part: "snippet",
-                q: "chino y nacho"
+                q: "Classical Guitar"
             }
         })
             .then(function (response) {
@@ -49,7 +47,6 @@ class SectionRight extends Component {
     render() {
         return (
             <div className="section section-right">
-                <h4>Playlist Title</h4>
                 {this.videoList()}
             </div>
         )
