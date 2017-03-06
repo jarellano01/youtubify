@@ -9,7 +9,7 @@
 .section-left {
     padding:15px;
     width: 200px;
-    background-color: #0b1221;
+    background-color: black;
     top: 0;
     left: 0;
 }
@@ -33,6 +33,7 @@
 }
 .section-header {
     margin-left: 200px;
+    padding-top: 8px;
     width: calc(100% - 200px);
     height: 50px;
     background-color: #222325;
@@ -69,4 +70,19 @@
     margin-right: 10px;
     margin-bottom: 10px;
     float: left;
+}
+
+.search {
+    background-color: rgba(14, 15, 17, 0.73);
+    width: calc(100% - 200px);
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.search-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }

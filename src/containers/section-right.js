@@ -19,7 +19,7 @@ class SectionRight extends Component {
 
     videoList() {
         return (
-            this.props.searchResults.map((video) => {
+            this.props.playlistVideos.map((video) => {
                 return (
                     <ListItem key={video.etag} video={video} selectVideo={this.props.selectVideo} />
                 )
@@ -49,6 +49,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-    return {searchResults: state.searchResults}
+    return {playlistVideos: state.playlistVideos}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SectionRight);

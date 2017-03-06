@@ -6,6 +6,7 @@ const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
 export const FETCH_VIDEOS = 'FETCH_VIDEOS';
 export const SELECT_VIDEO = 'SELECT_VIDEO';
 export const FETCH_PLAYLISTS = 'FETCH_PLAYLISTS';
+export const FETCH_PLAYLIST_VIDEOS = 'FETCH_PLAYLIST_VIDEOS';
 
 export function fetchVideos(term) {
     const params = {
@@ -34,5 +35,12 @@ export function fetchPlaylists(user){
     return {
         type: FETCH_PLAYLISTS,
         payload: ["Playlist1", "Playlist2", "Playlist3", "Playlist4"]
+    }
+}
+
+export function fetchPlaylistSongs(){
+    return {
+        type: FETCH_PLAYLIST_VIDEOS,
+        payload:[]
     }
 }

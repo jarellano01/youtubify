@@ -6,7 +6,7 @@ class SectionLeft extends Component {
     render(){
         return (
             <div className="section section-left">
-                <h3>Youtube Lists</h3>
+                <h3>Youtubify</h3>
             </div>
         )
     }
