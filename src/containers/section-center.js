@@ -63,11 +63,6 @@ class SectionCenter extends Component {
         return (
             <div className="section section-center">
                 <YouTube className="section-player" videoId={this.props.selectedVideo.id.videoId} onReady={this.onReady} opts={opts}/>
-
-                <div className="control-bar">
-                    <button className="btn btn-default" onClick={this.onPlayPauseVideo}>{this.state.playerActive ? "Pause": "Play"}</button>
-                    <button className="btn btn-default" onClick={this.onChangeVideo}>Change Video</button>
-                </div>
             </div>
         )
     }

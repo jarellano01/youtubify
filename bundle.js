@@ -87,7 +87,7 @@
 	
 	
 	// module
-	exports.push([module.id, "body {\n  background-color: seashell !important;\n}\n", ""]);
+	exports.push([module.id, "", ""]);
 	
 	// exports
 
@@ -424,11 +424,11 @@
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _reduxPromise = __webpack_require__(427);
+	var _reduxPromise = __webpack_require__(430);
 	
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 	
-	var _reducers = __webpack_require__(434);
+	var _reducers = __webpack_require__(437);
 	
 	var _reducers2 = _interopRequireDefault(_reducers);
 	
@@ -27725,13 +27725,25 @@
 	
 	var _reactRouter = __webpack_require__(204);
 	
-	var _app = __webpack_require__(266);
+	var _rootContent = __webpack_require__(266);
+	
+	var _rootContent2 = _interopRequireDefault(_rootContent);
+	
+	var _search = __webpack_require__(428);
+	
+	var _search2 = _interopRequireDefault(_search);
+	
+	var _app = __webpack_require__(429);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = _react2.default.createElement(_reactRouter.Route, { path: '/', component: _app2.default });
+	exports.default = _react2.default.createElement(
+	    _reactRouter.Route,
+	    { path: '/', component: _app2.default },
+	    _react2.default.createElement(_reactRouter.Route, { path: '/search', component: _search2.default })
+	);
 
 /***/ },
 /* 266 */
@@ -27761,6 +27773,10 @@
 	
 	var _sectionCenter2 = _interopRequireDefault(_sectionCenter);
 	
+	var _sectionHeader = __webpack_require__(427);
+	
+	var _sectionHeader2 = _interopRequireDefault(_sectionHeader);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27769,41 +27785,33 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var App = function (_Component) {
-	    _inherits(App, _Component);
+	var RootContent = function (_Component) {
+	    _inherits(RootContent, _Component);
 	
-	    function App() {
-	        _classCallCheck(this, App);
+	    function RootContent() {
+	        _classCallCheck(this, RootContent);
 	
-	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (RootContent.__proto__ || Object.getPrototypeOf(RootContent)).apply(this, arguments));
 	    }
 	
-	    _createClass(App, [{
+	    _createClass(RootContent, [{
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(
-	                    'div',
-	                    null,
-	                    _react2.default.createElement(_sectionLeft2.default, null),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'section section-header' },
-	                        'section header'
-	                    ),
-	                    _react2.default.createElement(_sectionCenter2.default, null),
-	                    _react2.default.createElement(_sectionRight2.default, null)
-	                )
+	                _react2.default.createElement(_sectionLeft2.default, null),
+	                _react2.default.createElement(_sectionHeader2.default, null),
+	                _react2.default.createElement(_sectionCenter2.default, null),
+	                _react2.default.createElement(_sectionRight2.default, null)
 	            );
 	        }
 	    }]);
 	
-	    return App;
+	    return RootContent;
 	}(_react.Component);
 	
-	exports.default = App;
+	exports.default = RootContent;
 
 /***/ },
 /* 267 */
@@ -27851,7 +27859,7 @@
 	                _react2.default.createElement(
 	                    'h3',
 	                    null,
-	                    'Youtube Lists'
+	                    'Youtubify'
 	                )
 	            );
 	        }
@@ -27926,8 +27934,10 @@
 	    _createClass(SectionRight, [{
 	        key: 'videoList',
 	        value: function videoList() {
-	            return this.props.searchResults.map(function (video) {
-	                return _react2.default.createElement(_listItem2.default, { key: video.etag, video: video });
+	            var _this2 = this;
+	
+	            return this.props.playlistVideos.map(function (video) {
+	                return _react2.default.createElement(_listItem2.default, { key: video.etag, video: video, selectVideo: _this2.props.selectVideo });
 	            });
 	        }
 	    }, {
@@ -27950,11 +27960,14 @@
 	}(_react.Component);
 	
 	function mapDispatchToProps(dispatch) {
-	    return (0, _redux.bindActionCreators)({ fetchVideos: _index.fetchVideos }, dispatch);
+	    return (0, _redux.bindActionCreators)({
+	        fetchVideos: _index.fetchVideos,
+	        selectVideo: _index.selectVideo
+	    }, dispatch);
 	}
 	
 	function mapStateToProps(state) {
-	    return { searchResults: state.searchResults };
+	    return { playlistVideos: state.playlistVideos };
 	}
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SectionRight);
 
@@ -29456,10 +29469,11 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.FETCH_PLAYLISTS = exports.SELECT_VIDEO = exports.FETCH_VIDEOS = undefined;
+	exports.FETCH_PLAYLIST_VIDEOS = exports.FETCH_PLAYLISTS = exports.SELECT_VIDEO = exports.FETCH_VIDEOS = undefined;
 	exports.fetchVideos = fetchVideos;
 	exports.selectVideo = selectVideo;
 	exports.fetchPlaylists = fetchPlaylists;
+	exports.fetchPlaylistSongs = fetchPlaylistSongs;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -29473,6 +29487,7 @@
 	var FETCH_VIDEOS = exports.FETCH_VIDEOS = 'FETCH_VIDEOS';
 	var SELECT_VIDEO = exports.SELECT_VIDEO = 'SELECT_VIDEO';
 	var FETCH_PLAYLISTS = exports.FETCH_PLAYLISTS = 'FETCH_PLAYLISTS';
+	var FETCH_PLAYLIST_VIDEOS = exports.FETCH_PLAYLIST_VIDEOS = 'FETCH_PLAYLIST_VIDEOS';
 	
 	function fetchVideos(term) {
 	    var params = {
@@ -29503,6 +29518,13 @@
 	        payload: ["Playlist1", "Playlist2", "Playlist3", "Playlist4"]
 	    };
 	}
+	
+	function fetchPlaylistSongs() {
+	    return {
+	        type: FETCH_PLAYLIST_VIDEOS,
+	        payload: []
+	    };
+	}
 
 /***/ },
 /* 295 */
@@ -29514,47 +29536,29 @@
 	    value: true
 	});
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	var _react = __webpack_require__(6);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var ListItem = function ListItem(_ref) {
+	    var video = _ref.video,
+	        selectVideo = _ref.selectVideo;
 	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var ListItem = function (_Component) {
-	    _inherits(ListItem, _Component);
-	
-	    function ListItem(props) {
-	        _classCallCheck(this, ListItem);
-	
-	        return _possibleConstructorReturn(this, (ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call(this, props));
-	    }
-	
-	    _createClass(ListItem, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "list-item" },
-	                _react2.default.createElement("img", { src: this.props.video.snippet.thumbnails.default.url, alt: "" }),
-	                _react2.default.createElement(
-	                    "span",
-	                    null,
-	                    this.props.video.snippet.title
-	                )
-	            );
-	        }
-	    }]);
-	
-	    return ListItem;
-	}(_react.Component);
+	    return _react2.default.createElement(
+	        "div",
+	        { className: "list-item", onClick: function onClick() {
+	                return selectVideo(video);
+	            } },
+	        _react2.default.createElement("img", { src: video.snippet.thumbnails.default.url, alt: "" }),
+	        _react2.default.createElement(
+	            "span",
+	            null,
+	            video.snippet.title
+	        )
+	    );
+	};
 	
 	exports.default = ListItem;
 
@@ -29618,13 +29622,12 @@
 	        value: function onReady(event) {
 	            this.setState({
 	                player: event.target
-	
 	            });
+	            console.log(this.props.selectedVideo);
 	        }
 	    }, {
 	        key: 'onPlayPauseVideo',
 	        value: function onPlayPauseVideo() {
-	            console.log(this.state.player.getPlayerState());
 	            if (this.state.player.getPlayerState() == 1) {
 	                this.state.player.pauseVideo();
 	                this.setState({
@@ -29650,13 +29653,13 @@
 	            var opts = {
 	                playerVars: {
 	                    controls: 0,
-	                    disablekb: 1
+	                    disable: 1
 	                }
 	            };
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'section section-center' },
-	                _react2.default.createElement(_reactYoutube2.default, { className: 'section-player', videoId: this.state.videoId, onReady: this.onReady, opts: opts }),
+	                _react2.default.createElement(_reactYoutube2.default, { className: 'section-player', videoId: this.props.selectedVideo.id.videoId, onReady: this.onReady, opts: opts }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'control-bar' },
@@ -29683,7 +29686,7 @@
 	}
 	
 	function mapStateToProps(state) {
-	    return {};
+	    return { selectedVideo: state.selectedVideo };
 	}
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SectionCenter);
 
@@ -36395,13 +36398,234 @@
 
 	'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(6);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(204);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var SectionHeader = function (_Component) {
+	    _inherits(SectionHeader, _Component);
+	
+	    function SectionHeader() {
+	        _classCallCheck(this, SectionHeader);
+	
+	        return _possibleConstructorReturn(this, (SectionHeader.__proto__ || Object.getPrototypeOf(SectionHeader)).apply(this, arguments));
+	    }
+	
+	    _createClass(SectionHeader, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'section section-header' },
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/search', className: 'btn btn-primary pull-right' },
+	                    'Search'
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return SectionHeader;
+	}(_react.Component);
+	
+	exports.default = SectionHeader;
+
+/***/ },
+/* 428 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(6);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(204);
+	
+	var _reactRedux = __webpack_require__(164);
+	
+	var _redux = __webpack_require__(171);
+	
+	var _index = __webpack_require__(294);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Search = function (_Component) {
+	    _inherits(Search, _Component);
+	
+	    function Search(props) {
+	        _classCallCheck(this, Search);
+	
+	        var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).call(this, props));
+	
+	        _this.state = {
+	            term: ""
+	        };
+	
+	        _this.onInputChange = _this.onInputChange.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(Search, [{
+	        key: 'onInputChange',
+	        value: function onInputChange(e) {
+	            this.setState({
+	                term: e.target.value
+	            });
+	
+	            (0, _index.fetchVideos)(this.state.term);
+	            console.log(this.props.searchResults);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'search' },
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/', className: 'btn btn-primary search-close' },
+	                    'Close'
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-sm-6' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'input-group' },
+	                        _react2.default.createElement('input', {
+	                            type: 'text',
+	                            value: this.state.term,
+	                            onChange: this.onInputChange,
+	                            className: 'form-control',
+	                            placeholder: 'Search for...'
+	                        }),
+	                        _react2.default.createElement(
+	                            'span',
+	                            { className: 'input-group-btn' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { className: 'btn btn-default', type: 'button' },
+	                                'Search'
+	                            )
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement('ul', { className: 'col-sm-12 search-results' })
+	            );
+	        }
+	    }]);
+	
+	    return Search;
+	}(_react.Component);
+	
+	function mapDispatchToProps(dispatch) {
+	    return (0, _redux.bindActionCreators)({
+	        fetchVideos: _index.fetchVideos
+	    }, dispatch);
+	}
+	
+	function mapStateToProps(state) {
+	    return { searchResults: state.searchResults };
+	}
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Search);
+
+/***/ },
+/* 429 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(6);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _rootContent = __webpack_require__(266);
+	
+	var _rootContent2 = _interopRequireDefault(_rootContent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var App = function (_Component) {
+	    _inherits(App, _Component);
+	
+	    function App() {
+	        _classCallCheck(this, App);
+	
+	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	    }
+	
+	    _createClass(App, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(_rootContent2.default, null),
+	                this.props.children
+	            );
+	        }
+	    }]);
+	
+	    return App;
+	}(_react.Component);
+	
+	exports.default = App;
+
+/***/ },
+/* 430 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	exports.__esModule = true;
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	exports['default'] = promiseMiddleware;
 	
-	var _fluxStandardAction = __webpack_require__(428);
+	var _fluxStandardAction = __webpack_require__(431);
 	
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -36428,7 +36652,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 428 */
+/* 431 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36439,7 +36663,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _lodashIsplainobject = __webpack_require__(429);
+	var _lodashIsplainobject = __webpack_require__(432);
 	
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 	
@@ -36458,7 +36682,7 @@
 	}
 
 /***/ },
-/* 429 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36469,9 +36693,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(430),
-	    isArguments = __webpack_require__(431),
-	    keysIn = __webpack_require__(432);
+	var baseFor = __webpack_require__(433),
+	    isArguments = __webpack_require__(434),
+	    keysIn = __webpack_require__(435);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -36567,7 +36791,7 @@
 
 
 /***/ },
-/* 430 */
+/* 433 */
 /***/ function(module, exports) {
 
 	/**
@@ -36621,7 +36845,7 @@
 
 
 /***/ },
-/* 431 */
+/* 434 */
 /***/ function(module, exports) {
 
 	/**
@@ -36856,7 +37080,7 @@
 
 
 /***/ },
-/* 432 */
+/* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36867,8 +37091,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(431),
-	    isArray = __webpack_require__(433);
+	var isArguments = __webpack_require__(434),
+	    isArray = __webpack_require__(436);
 	
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -36994,7 +37218,7 @@
 
 
 /***/ },
-/* 433 */
+/* 436 */
 /***/ function(module, exports) {
 
 	/**
@@ -37180,7 +37404,7 @@
 
 
 /***/ },
-/* 434 */
+/* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37191,31 +37415,36 @@
 	
 	var _redux = __webpack_require__(171);
 	
-	var _reducer_results = __webpack_require__(435);
+	var _reducer_results = __webpack_require__(438);
 	
 	var _reducer_results2 = _interopRequireDefault(_reducer_results);
 	
-	var _reducer_selected_video = __webpack_require__(436);
+	var _reducer_selected_video = __webpack_require__(439);
 	
 	var _reducer_selected_video2 = _interopRequireDefault(_reducer_selected_video);
 	
-	var _reducer_playlists = __webpack_require__(437);
+	var _reducer_playlists = __webpack_require__(440);
 	
 	var _reducer_playlists2 = _interopRequireDefault(_reducer_playlists);
+	
+	var _reducer_playlistSongs = __webpack_require__(441);
+	
+	var _reducer_playlistSongs2 = _interopRequireDefault(_reducer_playlistSongs);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var rootReducer = (0, _redux.combineReducers)({
 	    searchResults: _reducer_results2.default,
 	    selectedVideo: _reducer_selected_video2.default,
-	    playlists: _reducer_playlists2.default
+	    playlists: _reducer_playlists2.default,
+	    playlistVideos: _reducer_playlistSongs2.default
 	
 	});
 	
 	exports.default = rootReducer;
 
 /***/ },
-/* 435 */
+/* 438 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37230,6 +37459,7 @@
 	
 	    switch (action.type) {
 	        case _index.FETCH_VIDEOS:
+	            console.log(action.payload.data.items);
 	            return action.payload.data.items;
 	    }
 	
@@ -37239,7 +37469,7 @@
 	var _index = __webpack_require__(294);
 
 /***/ },
-/* 436 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37249,7 +37479,7 @@
 	});
 	
 	exports.default = function () {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initVideo;
 	    var action = arguments[1];
 	
 	    switch (action.type) {
@@ -37260,9 +37490,15 @@
 	};
 	
 	var _index = __webpack_require__(294);
+	
+	var initVideo = {
+	    id: {
+	        videoId: 'XxVg_s8xAms'
+	    }
+	};
 
 /***/ },
-/* 437 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37283,6 +37519,193 @@
 	};
 	
 	var _index = __webpack_require__(294);
+
+/***/ },
+/* 441 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	exports.default = function () {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : curPlaylist;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case _index.FETCH_PLAYLIST_VIDEOS:
+	            console.log(action.payload.data.items);
+	            return action.payload.data.items;
+	    }
+	
+	    return state;
+	};
+	
+	var _index = __webpack_require__(294);
+	
+	var curPlaylist = [{
+	    "kind": "youtube#searchResult",
+	    "etag": "\"uQc-MPTsstrHkQcRXL3IWLmeNsM/OXtUuy0m6q-R2PVi9HrkuDwfTwk\"",
+	    "id": {
+	        "kind": "youtube#video",
+	        "videoId": "NOZhkTLTKzU"
+	    },
+	    "snippet": {
+	        "publishedAt": "2013-12-31T21:09:53.000Z",
+	        "channelId": "UCMiD9p5NpD61dbOSGMy4u7w",
+	        "title": "Chill Out - Relaxing Classical Guitar, Spanish, Acoustic, Classical Music, Part 2",
+	        "description": "http://34.gs/s1rj AWESOME DEPRESSION METHOD: CLICK LINK ABOVE The Music: Part. 2 Romance de Durandarte Sonata, Andante Atom hearts Club Duo, ...",
+	        "thumbnails": {
+	            "default": {
+	                "url": "https://i.ytimg.com/vi/NOZhkTLTKzU/default.jpg",
+	                "width": 120,
+	                "height": 90
+	            },
+	            "medium": {
+	                "url": "https://i.ytimg.com/vi/NOZhkTLTKzU/mqdefault.jpg",
+	                "width": 320,
+	                "height": 180
+	            },
+	            "high": {
+	                "url": "https://i.ytimg.com/vi/NOZhkTLTKzU/hqdefault.jpg",
+	                "width": 480,
+	                "height": 360
+	            }
+	        },
+	        "channelTitle": "Ann Redgewell",
+	        "liveBroadcastContent": "none"
+	    }
+	}, {
+	    "kind": "youtube#searchResult",
+	    "etag": "\"uQc-MPTsstrHkQcRXL3IWLmeNsM/OH0Jf7AIrpxWuHZjgxgGFLSojMc\"",
+	    "id": {
+	        "kind": "youtube#video",
+	        "videoId": "V80EzF--UNk"
+	    },
+	    "snippet": {
+	        "publishedAt": "2015-03-16T13:22:44.000Z",
+	        "channelId": "UCo5RYA-DJT3ckxftIPR4wlw",
+	        "title": "3 HOURS Best Calming Music | Classical Guitar | Background, Relax, Sleep, Study, Meditation | #2",
+	        "description": "Best Calming Music | Guitar Relaxing Music Enjoy 3 hours of soothing classical guitar music. You can use it for relax, sleeping, studying, etc. On this channel you ...",
+	        "thumbnails": {
+	            "default": {
+	                "url": "https://i.ytimg.com/vi/V80EzF--UNk/default.jpg",
+	                "width": 120,
+	                "height": 90
+	            },
+	            "medium": {
+	                "url": "https://i.ytimg.com/vi/V80EzF--UNk/mqdefault.jpg",
+	                "width": 320,
+	                "height": 180
+	            },
+	            "high": {
+	                "url": "https://i.ytimg.com/vi/V80EzF--UNk/hqdefault.jpg",
+	                "width": 480,
+	                "height": 360
+	            }
+	        },
+	        "channelTitle": "TheRelaxingWorld",
+	        "liveBroadcastContent": "none"
+	    }
+	}, {
+	    "kind": "youtube#searchResult",
+	    "etag": "\"uQc-MPTsstrHkQcRXL3IWLmeNsM/9RNPOvqOn_YfmHrxYIkcSHomN5M\"",
+	    "id": {
+	        "kind": "youtube#video",
+	        "videoId": "8B6jOUzBKYc"
+	    },
+	    "snippet": {
+	        "publishedAt": "2011-12-08T05:29:38.000Z",
+	        "channelId": "UCXGoBMZ1hSQqgMogIQkjBwQ",
+	        "title": "Malaguena - Michael Lucarelli,  classical guitar",
+	        "description": "CD \"Favorites\" available http://www.michaellucarelli.com Michael Lucarelli plays \"Malaguena\" on classical guitar. Bonneville Salt Flats Support me by ...",
+	        "thumbnails": {
+	            "default": {
+	                "url": "https://i.ytimg.com/vi/8B6jOUzBKYc/default.jpg",
+	                "width": 120,
+	                "height": 90
+	            },
+	            "medium": {
+	                "url": "https://i.ytimg.com/vi/8B6jOUzBKYc/mqdefault.jpg",
+	                "width": 320,
+	                "height": 180
+	            },
+	            "high": {
+	                "url": "https://i.ytimg.com/vi/8B6jOUzBKYc/hqdefault.jpg",
+	                "width": 480,
+	                "height": 360
+	            }
+	        },
+	        "channelTitle": "Michael Lucarelli",
+	        "liveBroadcastContent": "none"
+	    }
+	}, {
+	    "kind": "youtube#searchResult",
+	    "etag": "\"uQc-MPTsstrHkQcRXL3IWLmeNsM/fMaBYPEhK5VDOwF-Ssd9XVoTnO4\"",
+	    "id": {
+	        "kind": "youtube#video",
+	        "videoId": "uRz3AQx21y8"
+	    },
+	    "snippet": {
+	        "publishedAt": "2014-05-31T07:56:46.000Z",
+	        "channelId": "UCvQI6QKWZ0wQuRx3JcIWfmQ",
+	        "title": "The Best of Andrés Segovia /// Guitar Masterpieces for Classical Music Lovers (Full Album) [HQ]",
+	        "description": "Enjoy The Best of Andrés Segovia /// Guitar Masterpieces for Classical Music Lovers in High Quality Sound. Facebook ...",
+	        "thumbnails": {
+	            "default": {
+	                "url": "https://i.ytimg.com/vi/uRz3AQx21y8/default.jpg",
+	                "width": 120,
+	                "height": 90
+	            },
+	            "medium": {
+	                "url": "https://i.ytimg.com/vi/uRz3AQx21y8/mqdefault.jpg",
+	                "width": 320,
+	                "height": 180
+	            },
+	            "high": {
+	                "url": "https://i.ytimg.com/vi/uRz3AQx21y8/hqdefault.jpg",
+	                "width": 480,
+	                "height": 360
+	            }
+	        },
+	        "channelTitle": "Classical Tunes",
+	        "liveBroadcastContent": "none"
+	    }
+	}, {
+	    "kind": "youtube#searchResult",
+	    "etag": "\"uQc-MPTsstrHkQcRXL3IWLmeNsM/1W7-YPl9AaQc96rWQts1WS8wqXw\"",
+	    "id": {
+	        "kind": "youtube#video",
+	        "videoId": "UfZmMJKIBec"
+	    },
+	    "snippet": {
+	        "publishedAt": "2012-03-24T18:31:45.000Z",
+	        "channelId": "UCC-zoZQUQ4ADY3Kr0nEEBmg",
+	        "title": "Bohemian Rhapsody - Steve Bean - Classical Guitar",
+	        "description": "Available now on iTunes: https://itunes.apple.com/gb/album/bohemian-rhapsody-single/id734943587 www.stevebean.co.uk (for Tab -see below) TAB ...",
+	        "thumbnails": {
+	            "default": {
+	                "url": "https://i.ytimg.com/vi/UfZmMJKIBec/default.jpg",
+	                "width": 120,
+	                "height": 90
+	            },
+	            "medium": {
+	                "url": "https://i.ytimg.com/vi/UfZmMJKIBec/mqdefault.jpg",
+	                "width": 320,
+	                "height": 180
+	            },
+	            "high": {
+	                "url": "https://i.ytimg.com/vi/UfZmMJKIBec/hqdefault.jpg",
+	                "width": 480,
+	                "height": 360
+	            }
+	        },
+	        "channelTitle": "Steve Bean",
+	        "liveBroadcastContent": "none"
+	    }
+	}];
 
 /***/ }
 /******/ ]);
