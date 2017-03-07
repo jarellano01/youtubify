@@ -7,6 +7,8 @@ export const FETCH_VIDEOS = 'FETCH_VIDEOS';
 export const SELECT_VIDEO = 'SELECT_VIDEO';
 export const FETCH_PLAYLISTS = 'FETCH_PLAYLISTS';
 export const FETCH_PLAYLIST_VIDEOS = 'FETCH_PLAYLIST_VIDEOS';
+export const SET_PLAYER = 'SET_PLAYER';
+export const SET_PLAYER_STATE = 'SET_PLAYER_STATE';
 
 export function fetchVideos(term) {
     const params = {
@@ -39,9 +41,23 @@ export function fetchPlaylists(user){
     }
 }
 
+export function setPlayer(iframePlayer){
+    return {
+        type: SET_PLAYER, iframePlayer,
+        payload: iframePlayer
+    }
+}
+
 export function fetchPlaylistSongs(){
     return {
         type: FETCH_PLAYLIST_VIDEOS,
         payload:[]
+    }
+}
+
+export function setPlayerState(playerState){
+    return {
+        type: SET_PLAYER_STATE,
+        payload: playerState
     }
 }

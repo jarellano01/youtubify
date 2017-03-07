@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {setPlayer, setPlayerState} from '../actions/index';
 
 import YouTube from 'react-youtube';
 
@@ -20,29 +21,15 @@ class SectionCenter extends Component {
 
         this.onReady = this.onReady.bind(this);
         this.onChangeVideo = this.onChangeVideo.bind(this);
-        this.onPlayPauseVideo = this.onPlayPauseVideo.bind(this);
+        this.onStateChange = this.onStateChange.bind(this);
     }
 
     onReady(event) {
-        this.setState({
-            player: event.target,
-        });
-        console.log(this.props.selectedVideo)
+       this.props.setPlayer(event.target);
     }
 
-    onPlayPauseVideo() {
-        if(this.state.player.getPlayerState() == 1){
-            this.state.player.pauseVideo();
-            this.setState({
-                playerActive: false
-            })
-        }
-        else{
-            this.state.player.playVideo();
-            this.setState({
-                playerActive: true
-            })
-        }
+    onStateChange(e) {
+        this.props.setPlayerState(e.data)
     }
 
 
@@ -62,17 +49,20 @@ class SectionCenter extends Component {
         };
         return (
             <div className="section section-center">
-                <YouTube className="section-player" videoId={this.props.selectedVideo.id.videoId} onReady={this.onReady} opts={opts}/>
+                <YouTube className="section-player" videoId={this.props.selectedVideo.id.videoId} onReady={this.onReady} onStateChange={(e) => this.onStateChange(e)} opts={opts}/>
             </div>
         )
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({setPlayer, setPlayerState}, dispatch);
 }
 
 function mapStateToProps(state) {
-    return {selectedVideo: state.selectedVideo}
+    return {
+        selectedVideo: state.selectedVideo,
+        player: state.player
+    }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SectionCenter);
