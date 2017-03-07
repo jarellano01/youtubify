@@ -1,14 +1,11 @@
 .section-center {
   width: calc(~"100% -" @width-left-section ~"-" @width-right-section);
-  background-color: black;
-  margin-right: @width-right-section;
-  margin-left: @width-left-section;
-  margin-top: @height-header-section;
+  margin: @height-header-section @width-right-section @height-control-bar @width-left-section;
+  height: calc(~"100% -" @height-control-bar ~"-" @height-header-section);
+  padding: 15px;
 }
-
-
 
 .section-player {
   width: 100%;
-  height: calc(~"100% - 110px");
+  height: 100%;
 }

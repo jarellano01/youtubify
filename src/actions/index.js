@@ -18,6 +18,7 @@ export function fetchVideos(term) {
 
     const request = axios.get(ROOT_URL, {params: params});
 
+    if(term==null) return {};
     return {
         type: FETCH_VIDEOS,
         payload: request

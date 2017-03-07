@@ -27,9 +27,7 @@ class SectionRight extends Component {
         )
     }
 
-    componentWillMount() {
-        this.props.fetchVideos('classical guitar');
-    }
+
 
     render() {
         return (

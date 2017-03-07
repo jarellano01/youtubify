@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default SearchListItem = ({video}) => {
+const SearchListItem = ({video}) => {
     return (
         <li className="list-group-item">
             <div className="video-list media">
@@ -15,4 +15,6 @@ export default SearchListItem = ({video}) => {
             </div>
         </li>
     )
-}
+};
+
+export default SearchListItem;

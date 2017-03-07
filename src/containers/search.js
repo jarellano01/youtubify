@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchVideos} from '../actions/index';
 
+import SearchListItem from '../components/search-list-item';
+
 class Search extends Component {
     constructor(props) {
         super(props);
@@ -13,6 +15,7 @@ class Search extends Component {
         };
 
         this.onInputChange = this.onInputChange.bind(this);
+        this.renderResults = this.renderResults.bind(this);
     }
 
     onInputChange(e){
@@ -20,9 +23,25 @@ class Search extends Component {
             term: e.target.value
         });
 
-        fetchVideos(this.state.term);
-        console.log(this.props.searchResults);
 
+        this.props.fetchVideos(this.state.term);
+        console.log(this.state.term);
+
+
+
+    }
+
+    renderResults(){
+        return (
+            this.props.searchResults.map((video) => {
+                return (
+                    <SearchListItem
+                        key={video.etag}
+                        video={video}
+                    />
+                )
+            })
+        )
 
     }
 
@@ -33,7 +52,7 @@ class Search extends Component {
                 <Link to="/" className="btn btn-primary search-close">
                     Close
                 </Link>
-                <div className="col-sm-6">
+                <div className="col-sm-10">
                     <div className="input-group">
                         <input
                             type="text"
@@ -47,7 +66,8 @@ class Search extends Component {
                         </span>
                     </div>
                 </div>
-                <ul className="col-sm-12 search-results">
+                <ul className="col-sm-8 search-results">
+                    {this.renderResults()}
                 </ul>
             </div>
         )
