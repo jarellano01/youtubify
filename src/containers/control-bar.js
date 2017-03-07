@@ -13,8 +13,6 @@ class ControlBar extends Component {
         this.onPlayPauseVideo = this.onPlayPauseVideo.bind(this);
     }
 
-
-
     onPlayPauseVideo() {
         if(this.props.player == null){
             return;
