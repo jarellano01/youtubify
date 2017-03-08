@@ -14,25 +14,24 @@ class SectionRight extends Component {
             searchVideos: []
         };
 
-        this.videoList = this.videoList.bind(this);
+        //this.videoList = this.videoList.bind(this);
     }
 
-    videoList() {
-        return (
-            this.props.playlistVideos.map((video) => {
-                return (
-                    <ListItem key={video.etag} video={video} selectVideo={this.props.selectVideo} />
-                )
-            })
-        )
-    }
+    // videoList() {
+    //     return (
+    //         this.props.playlistVideos.map((video) => {
+    //             return (
+    //                 <ListItem key={video.etag} video={video} selectVideo={this.props.selectVideo} />
+    //             )
+    //         })
+    //     )
+    // }
 
 
 
     render() {
         return (
             <div className="section section-right">
-                {this.videoList()}
             </div>
         )
     }

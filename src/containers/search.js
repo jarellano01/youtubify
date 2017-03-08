@@ -2,7 +2,7 @@ import React, {Component}  from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {fetchVideos} from '../actions/index';
+import {fetchVideos, addVideoToPlaylist} from '../actions/index';
 
 import SearchListItem from '../components/search-list-item';
 
@@ -38,6 +38,7 @@ class Search extends Component {
                     <SearchListItem
                         key={video.etag}
                         video={video}
+                        onClick ={this.props.addVideoToPlaylist}
                     />
                 )
             })
@@ -77,7 +78,8 @@ class Search extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        fetchVideos: fetchVideos
+        fetchVideos: fetchVideos,
+        addVideoToPlaylist: addVideoToPlaylist
     }, dispatch);
 }
 
