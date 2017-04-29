@@ -424,11 +424,11 @@
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _reduxPromise = __webpack_require__(430);
+	var _reduxPromise = __webpack_require__(432);
 	
 	var _reduxPromise2 = _interopRequireDefault(_reduxPromise);
 	
-	var _reducers = __webpack_require__(437);
+	var _reducers = __webpack_require__(439);
 	
 	var _reducers2 = _interopRequireDefault(_reducers);
 	
@@ -27729,11 +27729,11 @@
 	
 	var _rootContent2 = _interopRequireDefault(_rootContent);
 	
-	var _search = __webpack_require__(428);
+	var _search = __webpack_require__(429);
 	
 	var _search2 = _interopRequireDefault(_search);
 	
-	var _app = __webpack_require__(429);
+	var _app = __webpack_require__(431);
 	
 	var _app2 = _interopRequireDefault(_app);
 	
@@ -27777,6 +27777,10 @@
 	
 	var _sectionHeader2 = _interopRequireDefault(_sectionHeader);
 	
+	var _controlBar = __webpack_require__(428);
+	
+	var _controlBar2 = _interopRequireDefault(_controlBar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27803,7 +27807,8 @@
 	                _react2.default.createElement(_sectionLeft2.default, null),
 	                _react2.default.createElement(_sectionHeader2.default, null),
 	                _react2.default.createElement(_sectionCenter2.default, null),
-	                _react2.default.createElement(_sectionRight2.default, null)
+	                _react2.default.createElement(_sectionRight2.default, null),
+	                _react2.default.createElement(_controlBar2.default, null)
 	            );
 	        }
 	    }]);
@@ -27939,11 +27944,6 @@
 	            return this.props.playlistVideos.map(function (video) {
 	                return _react2.default.createElement(_listItem2.default, { key: video.etag, video: video, selectVideo: _this2.props.selectVideo });
 	            });
-	        }
-	    }, {
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            this.props.fetchVideos('classical guitar');
 	        }
 	    }, {
 	        key: 'render',
@@ -29469,11 +29469,13 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.FETCH_PLAYLIST_VIDEOS = exports.FETCH_PLAYLISTS = exports.SELECT_VIDEO = exports.FETCH_VIDEOS = undefined;
+	exports.SET_PLAYER_STATE = exports.SET_PLAYER = exports.FETCH_PLAYLIST_VIDEOS = exports.FETCH_PLAYLISTS = exports.SELECT_VIDEO = exports.FETCH_VIDEOS = undefined;
 	exports.fetchVideos = fetchVideos;
 	exports.selectVideo = selectVideo;
 	exports.fetchPlaylists = fetchPlaylists;
+	exports.setPlayer = setPlayer;
 	exports.fetchPlaylistSongs = fetchPlaylistSongs;
+	exports.setPlayerState = setPlayerState;
 	
 	var _axios = __webpack_require__(269);
 	
@@ -29488,6 +29490,8 @@
 	var SELECT_VIDEO = exports.SELECT_VIDEO = 'SELECT_VIDEO';
 	var FETCH_PLAYLISTS = exports.FETCH_PLAYLISTS = 'FETCH_PLAYLISTS';
 	var FETCH_PLAYLIST_VIDEOS = exports.FETCH_PLAYLIST_VIDEOS = 'FETCH_PLAYLIST_VIDEOS';
+	var SET_PLAYER = exports.SET_PLAYER = 'SET_PLAYER';
+	var SET_PLAYER_STATE = exports.SET_PLAYER_STATE = 'SET_PLAYER_STATE';
 	
 	function fetchVideos(term) {
 	    var params = {
@@ -29499,6 +29503,7 @@
 	
 	    var request = _axios2.default.get(ROOT_URL, { params: params });
 	
+	    if (term == null) return {};
 	    return {
 	        type: FETCH_VIDEOS,
 	        payload: request
@@ -29519,10 +29524,24 @@
 	    };
 	}
 	
+	function setPlayer(iframePlayer) {
+	    return {
+	        type: SET_PLAYER, iframePlayer: iframePlayer,
+	        payload: iframePlayer
+	    };
+	}
+	
 	function fetchPlaylistSongs() {
 	    return {
 	        type: FETCH_PLAYLIST_VIDEOS,
 	        payload: []
+	    };
+	}
+	
+	function setPlayerState(playerState) {
+	    return {
+	        type: SET_PLAYER_STATE,
+	        payload: playerState
 	    };
 	}
 
@@ -29582,6 +29601,8 @@
 	
 	var _redux = __webpack_require__(171);
 	
+	var _index = __webpack_require__(294);
+	
 	var _reactYoutube = __webpack_require__(297);
 	
 	var _reactYoutube2 = _interopRequireDefault(_reactYoutube);
@@ -29613,32 +29634,19 @@
 	
 	        _this.onReady = _this.onReady.bind(_this);
 	        _this.onChangeVideo = _this.onChangeVideo.bind(_this);
-	        _this.onPlayPauseVideo = _this.onPlayPauseVideo.bind(_this);
+	        _this.onStateChange = _this.onStateChange.bind(_this);
 	        return _this;
 	    }
 	
 	    _createClass(SectionCenter, [{
 	        key: 'onReady',
 	        value: function onReady(event) {
-	            this.setState({
-	                player: event.target
-	            });
-	            console.log(this.props.selectedVideo);
+	            this.props.setPlayer(event.target);
 	        }
 	    }, {
-	        key: 'onPlayPauseVideo',
-	        value: function onPlayPauseVideo() {
-	            if (this.state.player.getPlayerState() == 1) {
-	                this.state.player.pauseVideo();
-	                this.setState({
-	                    playerActive: false
-	                });
-	            } else {
-	                this.state.player.playVideo();
-	                this.setState({
-	                    playerActive: true
-	                });
-	            }
+	        key: 'onStateChange',
+	        value: function onStateChange(e) {
+	            this.props.setPlayerState(e.data);
 	        }
 	    }, {
 	        key: 'onChangeVideo',
@@ -29650,6 +29658,8 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var _this2 = this;
+	
 	            var opts = {
 	                playerVars: {
 	                    controls: 0,
@@ -29659,21 +29669,9 @@
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'section section-center' },
-	                _react2.default.createElement(_reactYoutube2.default, { className: 'section-player', videoId: this.props.selectedVideo.id.videoId, onReady: this.onReady, opts: opts }),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'control-bar' },
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-default', onClick: this.onPlayPauseVideo },
-	                        this.state.playerActive ? "Pause" : "Play"
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 'btn btn-default', onClick: this.onChangeVideo },
-	                        'Change Video'
-	                    )
-	                )
+	                _react2.default.createElement(_reactYoutube2.default, { className: 'section-player', videoId: this.props.selectedVideo.id.videoId, onReady: this.onReady, onStateChange: function onStateChange(e) {
+	                        return _this2.onStateChange(e);
+	                    }, opts: opts })
 	            );
 	        }
 	    }]);
@@ -29682,11 +29680,14 @@
 	}(_react.Component);
 	
 	function mapDispatchToProps(dispatch) {
-	    return (0, _redux.bindActionCreators)({}, dispatch);
+	    return (0, _redux.bindActionCreators)({ setPlayer: _index.setPlayer, setPlayerState: _index.setPlayerState }, dispatch);
 	}
 	
 	function mapStateToProps(state) {
-	    return { selectedVideo: state.selectedVideo };
+	    return {
+	        selectedVideo: state.selectedVideo,
+	        player: state.player
+	    };
 	}
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SectionCenter);
 
@@ -36463,6 +36464,107 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactRedux = __webpack_require__(164);
+	
+	var _redux = __webpack_require__(171);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ControlBar = function (_Component) {
+	    _inherits(ControlBar, _Component);
+	
+	    function ControlBar(props) {
+	        _classCallCheck(this, ControlBar);
+	
+	        var _this = _possibleConstructorReturn(this, (ControlBar.__proto__ || Object.getPrototypeOf(ControlBar)).call(this, props));
+	
+	        _this.state = {
+	            playerActive: false
+	        };
+	
+	        _this.onPlayPauseVideo = _this.onPlayPauseVideo.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(ControlBar, [{
+	        key: 'onPlayPauseVideo',
+	        value: function onPlayPauseVideo() {
+	            if (this.props.player == null) {
+	                return;
+	            }
+	            if (this.props.player.getPlayerState() == 1) {
+	                this.props.player.pauseVideo();
+	                this.setState({
+	                    playerActive: false
+	                });
+	            } else {
+	                this.props.player.playVideo();
+	                this.setState({
+	                    playerActive: true
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+	
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'control-bar' },
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-default', onClick: function onClick() {
+	                            return _this2.onPlayPauseVideo();
+	                        } },
+	                    this.props.playerState == 1 ? "Pause" : "Play"
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-default' },
+	                    'Change Video'
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return ControlBar;
+	}(_react.Component);
+	
+	function mapDispatchToProps(dispatch) {
+	    return (0, _redux.bindActionCreators)({}, dispatch);
+	}
+	
+	function mapStateToProps(state) {
+	    return {
+	        player: state.player,
+	        playerState: state.playerState
+	    };
+	}
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ControlBar);
+
+/***/ },
+/* 429 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(6);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
 	var _reactRouter = __webpack_require__(204);
 	
 	var _reactRedux = __webpack_require__(164);
@@ -36470,6 +36572,10 @@
 	var _redux = __webpack_require__(171);
 	
 	var _index = __webpack_require__(294);
+	
+	var _searchListItem = __webpack_require__(430);
+	
+	var _searchListItem2 = _interopRequireDefault(_searchListItem);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -36492,6 +36598,7 @@
 	        };
 	
 	        _this.onInputChange = _this.onInputChange.bind(_this);
+	        _this.renderResults = _this.renderResults.bind(_this);
 	        return _this;
 	    }
 	
@@ -36502,8 +36609,18 @@
 	                term: e.target.value
 	            });
 	
-	            (0, _index.fetchVideos)(this.state.term);
-	            console.log(this.props.searchResults);
+	            this.props.fetchVideos(this.state.term);
+	            console.log(this.state.term);
+	        }
+	    }, {
+	        key: 'renderResults',
+	        value: function renderResults() {
+	            return this.props.searchResults.map(function (video) {
+	                return _react2.default.createElement(_searchListItem2.default, {
+	                    key: video.etag,
+	                    video: video
+	                });
+	            });
 	        }
 	    }, {
 	        key: 'render',
@@ -36518,7 +36635,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'col-sm-6' },
+	                    { className: 'col-sm-10' },
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'input-group' },
@@ -36540,7 +36657,11 @@
 	                        )
 	                    )
 	                ),
-	                _react2.default.createElement('ul', { className: 'col-sm-12 search-results' })
+	                _react2.default.createElement(
+	                    'ul',
+	                    { className: 'col-sm-8 search-results' },
+	                    this.renderResults()
+	                )
 	            );
 	        }
 	    }]);
@@ -36560,7 +36681,52 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Search);
 
 /***/ },
-/* 429 */
+/* 430 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(6);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SearchListItem = function SearchListItem(_ref) {
+	    var video = _ref.video;
+	
+	    return _react2.default.createElement(
+	        "li",
+	        { className: "list-group-item" },
+	        _react2.default.createElement(
+	            "div",
+	            { className: "video-list media" },
+	            _react2.default.createElement(
+	                "div",
+	                { className: "media-left" },
+	                _react2.default.createElement("img", { src: video.snippet.thumbnails.default.url, alt: "", className: "media-object" })
+	            ),
+	            _react2.default.createElement(
+	                "div",
+	                { className: "media-body" },
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "media-heading" },
+	                    video.snippet.title
+	                )
+	            )
+	        )
+	    );
+	};
+	
+	exports.default = SearchListItem;
+
+/***/ },
+/* 431 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36614,7 +36780,7 @@
 	exports.default = App;
 
 /***/ },
-/* 430 */
+/* 432 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36625,7 +36791,7 @@
 	
 	exports['default'] = promiseMiddleware;
 	
-	var _fluxStandardAction = __webpack_require__(431);
+	var _fluxStandardAction = __webpack_require__(433);
 	
 	function isPromise(val) {
 	  return val && typeof val.then === 'function';
@@ -36652,7 +36818,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 431 */
+/* 433 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36663,7 +36829,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _lodashIsplainobject = __webpack_require__(432);
+	var _lodashIsplainobject = __webpack_require__(434);
 	
 	var _lodashIsplainobject2 = _interopRequireDefault(_lodashIsplainobject);
 	
@@ -36682,7 +36848,7 @@
 	}
 
 /***/ },
-/* 432 */
+/* 434 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36693,9 +36859,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseFor = __webpack_require__(433),
-	    isArguments = __webpack_require__(434),
-	    keysIn = __webpack_require__(435);
+	var baseFor = __webpack_require__(435),
+	    isArguments = __webpack_require__(436),
+	    keysIn = __webpack_require__(437);
 	
 	/** `Object#toString` result references. */
 	var objectTag = '[object Object]';
@@ -36791,7 +36957,7 @@
 
 
 /***/ },
-/* 433 */
+/* 435 */
 /***/ function(module, exports) {
 
 	/**
@@ -36845,7 +37011,7 @@
 
 
 /***/ },
-/* 434 */
+/* 436 */
 /***/ function(module, exports) {
 
 	/**
@@ -37080,7 +37246,7 @@
 
 
 /***/ },
-/* 435 */
+/* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37091,8 +37257,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArguments = __webpack_require__(434),
-	    isArray = __webpack_require__(436);
+	var isArguments = __webpack_require__(436),
+	    isArray = __webpack_require__(438);
 	
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -37218,7 +37384,7 @@
 
 
 /***/ },
-/* 436 */
+/* 438 */
 /***/ function(module, exports) {
 
 	/**
@@ -37404,7 +37570,7 @@
 
 
 /***/ },
-/* 437 */
+/* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37415,21 +37581,29 @@
 	
 	var _redux = __webpack_require__(171);
 	
-	var _reducer_results = __webpack_require__(438);
+	var _reducer_results = __webpack_require__(440);
 	
 	var _reducer_results2 = _interopRequireDefault(_reducer_results);
 	
-	var _reducer_selected_video = __webpack_require__(439);
+	var _reducer_selected_video = __webpack_require__(441);
 	
 	var _reducer_selected_video2 = _interopRequireDefault(_reducer_selected_video);
 	
-	var _reducer_playlists = __webpack_require__(440);
+	var _reducer_playlists = __webpack_require__(442);
 	
 	var _reducer_playlists2 = _interopRequireDefault(_reducer_playlists);
 	
-	var _reducer_playlistSongs = __webpack_require__(441);
+	var _reducer_playlistVideos = __webpack_require__(443);
 	
-	var _reducer_playlistSongs2 = _interopRequireDefault(_reducer_playlistSongs);
+	var _reducer_playlistVideos2 = _interopRequireDefault(_reducer_playlistVideos);
+	
+	var _reducer_player = __webpack_require__(444);
+	
+	var _reducer_player2 = _interopRequireDefault(_reducer_player);
+	
+	var _reducer_playerState = __webpack_require__(445);
+	
+	var _reducer_playerState2 = _interopRequireDefault(_reducer_playerState);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -37437,14 +37611,16 @@
 	    searchResults: _reducer_results2.default,
 	    selectedVideo: _reducer_selected_video2.default,
 	    playlists: _reducer_playlists2.default,
-	    playlistVideos: _reducer_playlistSongs2.default
+	    playlistVideos: _reducer_playlistVideos2.default,
+	    player: _reducer_player2.default,
+	    playerState: _reducer_playerState2.default
 	
 	});
 	
 	exports.default = rootReducer;
 
 /***/ },
-/* 438 */
+/* 440 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37459,7 +37635,6 @@
 	
 	    switch (action.type) {
 	        case _index.FETCH_VIDEOS:
-	            console.log(action.payload.data.items);
 	            return action.payload.data.items;
 	    }
 	
@@ -37469,7 +37644,7 @@
 	var _index = __webpack_require__(294);
 
 /***/ },
-/* 439 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37498,7 +37673,7 @@
 	};
 
 /***/ },
-/* 440 */
+/* 442 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37521,7 +37696,7 @@
 	var _index = __webpack_require__(294);
 
 /***/ },
-/* 441 */
+/* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -37706,6 +37881,54 @@
 	        "liveBroadcastContent": "none"
 	    }
 	}];
+
+/***/ },
+/* 444 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	exports.default = function () {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case _index.SET_PLAYER:
+	            return action.payload;
+	    }
+	
+	    return state;
+	};
+	
+	var _index = __webpack_require__(294);
+
+/***/ },
+/* 445 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	exports.default = function () {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case _index.SET_PLAYER_STATE:
+	            return action.payload;
+	    }
+	
+	    return state;
+	};
+	
+	var _index = __webpack_require__(294);
 
 /***/ }
 /******/ ]);
